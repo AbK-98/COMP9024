@@ -1,0 +1,17 @@
+no memory allocated  
+buffer overflow
+dangling pointer
+memory leak 
+uninitialised read
+invalid free
+double free
+unchecked malloc
+
+
+
+
+
+
+
+
+
