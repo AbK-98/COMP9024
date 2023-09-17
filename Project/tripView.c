@@ -1,0 +1,137 @@
+// 2023 T2 9024
+//  The objective is to write a program tripView.c
+//  that generates an optimal trip on (a part of) Sydney's railway network based on user preferences.
+
+/*
+The time complexity of my program is as follows:
+Reading the the size of the network, n is in O(n)
+Reading the  the timetable and stops input: O(m * s)
+The function findPath also has a time complexity of O(m * s) so the while loop in the main function is O(q * m * s) sd there is an additional while loop to take user input
+Overall my program has a time complexity of O(n^2)
+*/
+
+#include <string.h>
+#include <assert.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdbool.h>
+#include <math.h>
+#define MAXTT 20
+#define MAXSTATNAM 17
+
+typedef struct Network
+{
+    char name[17]; // name of a station
+    int time;      // the time – in minutes – it takes to transfer to a different train at that station.
+} Network;
+
+typedef struct Stop
+{
+    char name[17]; // name of a station
+    int hhmm;
+} Stop;
+
+struct Timetable
+{
+    struct Stop stops[MAXTT]; // Array of stops for the route
+} Timetable;
+
+int num_Stops; // the number of stops
+struct Timetable timetables[MAXTT];
+int i, j;
+
+// Function to calculate the direct path between two stations
+void findPath(char fstation[MAXSTATNAM], char tstation[MAXSTATNAM], int atime, int timet, int stoparr[])
+{
+    bool foundConnection = false;
+    for (i = 0; i < timet; i++)
+    {
+        int findex = -1;
+        int tindex = -1;
+
+        for (j = 0; j < stoparr[i]; j++)
+        {
+            if (strcmp(timetables[i].stops[j].name, fstation) == 0)
+            {
+                findex = j;
+            }
+            if (strcmp(timetables[i].stops[j].name, tstation) == 0)
+            {
+                tindex = j;
+                if (timetables[i].stops[j].hhmm <= atime)
+                {
+                    break;
+                }
+            }
+        }
+
+        if (findex != -1 && tindex != -1 && findex <= tindex)
+        {
+            if (timetables[i].stops[tindex].hhmm <= atime)
+            {
+                foundConnection = true;
+                for (j = findex; j <= tindex; j++)
+                {
+                    printf("%04d %s\n", timetables[i].stops[j].hhmm, timetables[i].stops[j].name);
+                }
+                break;
+            }
+        }
+    }
+    if (!foundConnection)
+    {
+        printf("No connection.\n");
+    }
+}
+
+int main()
+{
+    int timet; // Number of timetable
+    int n;     // indicating the number of railway stations on the network
+    int stoparr[10];
+    printf("Size of network: ");
+    scanf("%d", &n);
+    Network net[n];
+    for (i = 0; i < n; i++)
+    {
+        scanf("%s", net[i].name);
+        scanf("%d", &net[i].time);
+    }
+
+    // To calculate timetable and stops input
+    printf("Number of timetables: ");
+    scanf("%d", &timet);
+    for (i = 0; i < timet; i++)
+    {
+        printf("Number of stops: ");
+        scanf("%d", &num_Stops);
+        stoparr[i] = num_Stops;
+        for (j = 0; j < num_Stops; j++)
+        {
+            scanf("\n%s", timetables[i].stops[j].name);
+            scanf("\n%d", &timetables[i].stops[j].hhmm);
+        }
+    }
+    char fromStation[17], toStation[17];
+    int ATime;
+    int k = 0;
+
+    // To calcualte the other inputs like from station and to station and Arrival time
+    while (k == 0)
+    {
+        printf("\nFrom: ");
+        if (scanf("%s", fromStation) == 1 && (strcmp(fromStation, "done") == 0 || strcmp(fromStation, "Done") == 0))
+        {
+            k = 1;
+            printf("Bye\n");
+            exit(0);
+        }
+        printf("To: ");
+        scanf("%s", toStation);
+        printf("Arrive at or before:\n");
+        scanf("%d", &ATime);
+        findPath(fromStation, toStation, ATime, timet, stoparr);
+    }
+
+    return 0;
+}

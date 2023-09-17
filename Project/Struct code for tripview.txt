@@ -1,0 +1,88 @@
+//2023 T2 9024 
+// The objective is to write a program tripView.c 
+// that generates an optimal trip on (a part of) Sydney's railway network based on user preferences.
+
+#include <assert.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
+#include "WGraph.h"
+
+typedef struct Timetable {
+    char name[16];
+    int arrivalTime;
+} Timetable;
+
+typedef struct Network {
+    char name[16]; //name of a station
+    int time; //the time – in minutes – it takes to transfer to a different train at that station.
+}Network;
+
+
+int main(){
+int i;
+int n; // indicating the number of railway stations on the network
+int m=20; //the number of trains on any day
+int s=20; // the number of stops
+
+//char FromStation[16]; //From station variable 
+//char ToStation[16]; // To station varaible 
+//int ATime; // Arrival time 
+
+printf("Size of network: ");
+scanf("%d",&n);
+Network net[n];
+for(int i=0;i<n;i++){
+    scanf("%s",net[i].name);
+    scanf("%d",&net[i].time);
+                             }
+
+// Print the data stored in the net array
+printf("\nNetwork Information:\n");
+for (i = 0; i < n; i++) {
+    printf("Station Name: %s\n", net[i].name);
+    printf("Transfer Time: %d minutes\n", net[i].time);
+    printf("-----------------------------\n");
+}
+
+Timetable tt[m][s];
+printf("\nNumber of timetables: ");
+scanf("%d",&m);
+for(int i=0;i<m;i++){
+   printf("\nNumber of stops: ");
+   scanf("%d",&s);
+   for(int j=0;j<s;j++){
+        scanf("%s",tt[i][j].name);
+        if(scanf("%d",&tt[i][j].arrivalTime)&&((tt[i][j].arrivalTime>=0000)&&(tt[i][j].arrivalTime<=2359)))
+        continue;
+}
+}
+
+printf("\nTime Table  Information:\n");
+for (i = 0; i < m; i++) {
+    for(int j=0;j < s;j++){
+        printf("Station Name: %s\n",tt[i][j].name);
+        printf("Time: %04d minutes\n", tt[i][j].arrivalTime);
+        printf("-----------------------------\n");
+    }   
+}
+
+
+/*
+int k=0; 
+while(k==0){
+    printf("\nFrom: ");
+    if(scanf("%s",FromStation)=='done'|| (FromStation=='Done')){
+        k=1;
+        exit;
+    }
+    printf("\nTo: ");
+    scanf("%s",ToStation);
+    printf("\nArrive at or before: ");
+    scanf("%d",ATime);
+}
+
+*/
+
+return 0; 
+}
